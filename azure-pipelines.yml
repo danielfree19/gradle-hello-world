@@ -36,6 +36,8 @@ steps:
     fi
     
     version="$major_version.$minor_version.$patch_version"
+    sed -i "s/version = \"$version\"/version = \"$major_version.$minor_version.$patch_version\"/" build.gradle.kts
+    cat build.gradle.kts
     echo "New version: $version"
     echo "##vso[task.setvariable variable=version;]$version"
   displayName: 'Extract version from build.gradle.kts'
