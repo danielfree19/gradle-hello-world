@@ -34,9 +34,8 @@ steps:
         major_version=$((major_version + 1))
       fi
     fi
-    
-    version="$major_version.$minor_version.$patch_version"
     sed -i "s/version = \"$version\"/version = \"$major_version.$minor_version.$patch_version\"/" build.gradle.kts
+    version="$major_version.$minor_version.$patch_version"
     cat build.gradle.kts
     echo "New version: $version"
     echo "##vso[task.setvariable variable=version;]$version"
