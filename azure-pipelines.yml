@@ -5,11 +5,27 @@
 
 trigger:
 - master
-
+variables:
+- name: version
+   
 pool:
   vmImage: ubuntu-latest
 
 steps:
+- displayName: 'Fetch jar version'
+  name: 'FetchJarVersion'
+  script: |
+    version=$(cat build.gradle.kts | grep 'version =' | awk '{print $3}' | tr -d \")
+    echo "##vso[task.setvariable variable=version;]$version"  
+
+- name: 'debug'
+  displayName: 'Debug Variables'
+  script: |
+    echo "Version: $(version)"
+    echo "JAVA_HOME: $JAVA_HOME"
+    echo "PATH: $PATH"
+    echo "${version}"
+
 - task: Gradle@3
   inputs:
     gradleWrapperFile: 'gradlew'  # Path to your Gradle wrapper
