@@ -71,5 +71,5 @@ steps:
     Dockerfile: '**/dockerfile' # Path to your Dockerfile
     tags: |
       latest
-      $(version) # Use the version extracted earlier
+      $(version)
   displayName: 'Build and Push Docker Image'
