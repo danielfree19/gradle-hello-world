@@ -13,7 +13,7 @@ plugins {
 
 group = "com.ido"
 description = "HelloWorld"
-version = "1.8.3"
+version = "1.8.4"
 
 application.mainClass.set("com.ido.HelloWorld")
 
