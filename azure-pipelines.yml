@@ -36,7 +36,7 @@ steps:
     fi
     sed -i "s/version = \"$version\"/version = \"$major_version.$minor_version.$patch_version\"/" build.gradle.kts
     version="$major_version.$minor_version.$patch_version"
-    cat build.gradle.kts
+    
     echo "New version: $version"
     echo "##vso[task.setvariable variable=version;]$version"
   displayName: 'Extract version from build.gradle.kts'
@@ -46,3 +46,15 @@ steps:
     gradleWrapperFile: 'gradlew'  # Path to your Gradle wrapper
     tasks: 'build'  # Replace with the tasks you want to run
     options: '--no-daemon' 
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/build/libs' # string. Required. Root folder or file to archive. Default: $(Build.BinariesDirectory).
+    archiveType: 'zip' # 'zip' | '7z' | 'tar' | 'wim'. Required. Archive type. Default: zip.
+    archiveFile: '$(Build.ArtifactStagingDirectory)/libs-$(Build.BuildId).zip' # string. Required. Archive file to create. Default: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip.
+  displayName: 'Archive Gradle Build Artifacts'
+
+- publish: $(System.DefaultWorkingDirectory)/build/
+  artifact: GradleHelloWorld
+  displayName: 'Publish Gradle Build Artifacts'
+
