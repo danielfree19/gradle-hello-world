@@ -7,6 +7,11 @@ trigger:
 - master
 variables:
 - name: version
+- name: repository
+  value: 'danielfree19/gradle-hello-world' # Replace with your Docker repository name
+- name: containerRegistry
+  value: 'registry.hub.docker.com' # Replace with your service connection name
+
    
 pool:
   vmImage: ubuntu-latest
@@ -58,3 +63,13 @@ steps:
   artifact: GradleHelloWorld
   displayName: 'Publish Gradle Build Artifacts'
 
+- task: Docker@2
+  inputs:
+    containerRegistry: "${containerRegistry}" # Replace with your service connection name
+    repository: "${repository}" # Replace with your Docker repository name
+    command: 'buildAndPush'
+    Dockerfile: '**/dockerfile' # Path to your Dockerfile
+    tags: |
+      latest
+      $(version) # Use the version extracted earlier
+  displayName: 'Build and Push Docker Image'
