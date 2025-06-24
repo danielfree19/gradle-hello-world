@@ -22,4 +22,4 @@ RUN groupadd --system daniel && \
 
 user daniel
 
-ENTRYPOINT ["java", "-XX:UseSVE=0", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
