@@ -16,6 +16,9 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+  # Only persistCredentials when need to commit back
+- checkout: self
+  persistCredentials: "true"
 # get the latest version from build.gradle.kts and increment the patch version and increment the minor version if patch version exceeds 9, and increment the major version if minor version exceeds 9
 - script: |
     version=$(cat build.gradle.kts | grep 'version =' | awk '{print $3}' | tr -d \")
@@ -82,8 +85,8 @@ steps:
 - script: |
     git config --global user.email "danielfree19@gmail.com"
     git config --global user.name "Daniel Free"
+    git switch -c master
     git add build.gradle.kts
     git commit -m "Bump version to $(version)"
-    standard-version
-    git push --follow-tags origin HEAD:$(Build.SourceBranchName)
+    git push origin master
   displayName: 'Update version in git repository'
