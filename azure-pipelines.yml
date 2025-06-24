@@ -9,7 +9,7 @@ variables:
 - name: version
 - name: repository
   value: 'danielfree19/gradle-hello-world' # Replace with your Docker repository name
-- name: containerRegistry
+- name: containerService
   value: 'docker-hub' # Replace with your service connection name
 
    
@@ -65,8 +65,8 @@ steps:
 
 - task: Docker@2
   inputs:
-    containerRegistry: ${containerRegistry} # Replace with your service connection name
-    repository: ${repository} # Replace with your Docker repository name
+    containerRegistry: '$(containerService)' # Replace with your service connection name
+    repository: '$(repository)' # Replace with your Docker repository name
     command: 'buildAndPush'
     Dockerfile: '**/dockerfile' # Path to your Dockerfile
     tags: |
