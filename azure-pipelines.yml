@@ -82,6 +82,7 @@ steps:
 - script: |
     git config --global user.email "danielfree19@gmail.com"
     git config --global user.name "Daniel Free"
+    git switch -c master
     git add build.gradle.kts
     git commit -m "Bump version to $(version)"
     git push origin master
