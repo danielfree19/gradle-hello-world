@@ -11,12 +11,12 @@ variables:
   value: 'danielfree19/gradle-hello-world' # Replace with your Docker repository name
 - name: containerService
   value: 'docker-hub' # Replace with your service connection name
-
    
 pool:
   vmImage: ubuntu-latest
 
 steps:
+# get the latest version from build.gradle.kts and increment the patch version and increment the minor version if patch version exceeds 9, and increment the major version if minor version exceeds 9
 - script: |
     version=$(cat build.gradle.kts | grep 'version =' | awk '{print $3}' | tr -d \")
     patch_version=$(echo $version | cut -d'.' -f3)
@@ -46,12 +46,14 @@ steps:
     echo "##vso[task.setvariable variable=version;]$version"
   displayName: 'Extract version from build.gradle.kts'
 
+# Build the app to prepare for artifact publishing
 - task: Gradle@3
   inputs:
     gradleWrapperFile: 'gradlew'  # Path to your Gradle wrapper
     tasks: 'build'  # Replace with the tasks you want to run
     options: '--no-daemon' 
 
+# Archive the build output jar file
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/build/libs' # string. Required. Root folder or file to archive. Default: $(Build.BinariesDirectory).
@@ -59,10 +61,12 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/libs-$(Build.BuildId).zip' # string. Required. Archive file to create. Default: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip.
   displayName: 'Archive Gradle Build Artifacts'
 
+# Publish the archived build output as an artifact
 - publish: $(Build.ArtifactStagingDirectory)/libs-$(Build.BuildId).zip
   artifact: GradleHelloWorld
   displayName: 'Publish Gradle Build Artifacts'
 
+# Build and push the Docker image
 - task: Docker@2
   inputs:
     containerRegistry: '$(containerService)' # Replace with your service connection name
@@ -73,3 +77,12 @@ steps:
       latest
       $(version)
   displayName: 'Build and Push Docker Image'
+
+# Update the version in the git repository
+- script: |
+    git config --global user.email "danielfree19@gmail.com"
+    git config --global user.name "Daniel Free"
+    git add build.gradle.kts
+    git commit -m "Bump version to $(version)"
+    git push origin master
+  displayName: 'Update version in git repository'
