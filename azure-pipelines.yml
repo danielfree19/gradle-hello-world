@@ -54,7 +54,7 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/libs-$(Build.BuildId).zip' # string. Required. Archive file to create. Default: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip.
   displayName: 'Archive Gradle Build Artifacts'
 
-- publish: $(System.DefaultWorkingDirectory)/build/
+- publish: $(Build.ArtifactStagingDirectory)/libs-$(Build.BuildId).zip
   artifact: GradleHelloWorld
   displayName: 'Publish Gradle Build Artifacts'
 
